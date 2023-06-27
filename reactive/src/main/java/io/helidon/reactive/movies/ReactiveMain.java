@@ -12,10 +12,6 @@ import io.helidon.reactive.webserver.Routing;
 import io.helidon.reactive.webserver.WebServer;
 
 public class ReactiveMain {
-    private static final AtomicInteger COUNTER = new AtomicInteger();
-    // no need to use secure random to compute sleep times
-    private static final Random RANDOM = new Random();
-    private static final ScheduledExecutorService SCHEDULED_EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
     public static void main(String[] args) {
         LogConfig.configureRuntime();

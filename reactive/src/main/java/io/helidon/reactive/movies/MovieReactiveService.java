@@ -16,7 +16,6 @@ import io.helidon.reactive.webserver.Service;
 
 class MovieReactiveService implements Service {
     private static final ExecutorService EXECUTOR = Executors.newVirtualThreadPerTaskExecutor();
-    private static final Async ASYNC = Async.builder().executor(EXECUTOR).build();
     private static WebClient client;
 
     static void port(int port) {
@@ -61,9 +60,10 @@ class MovieReactiveService implements Service {
         int count = count(req);
 
         Multi.range(0, count)
-                .flatMap(i -> Single.create(CompletableFuture.supplyAsync(() -> {
-                            return client().get().request(String.class);
-                        }, EXECUTOR))
+                .flatMap(i -> Single.create(CompletableFuture
+                                                    .supplyAsync(() -> client()
+                                                            .get()
+                                                            .request(String.class), EXECUTOR))
                         .flatMap(Function.identity()))
                 .collectList()
                 .map(it -> "Movies: " + it)
@@ -72,6 +72,9 @@ class MovieReactiveService implements Service {
     }
 
     private int count(ServerRequest req) {
-        return req.queryParams().first("count").map(Integer::parseInt).orElse(3);
+        return req.queryParams()
+                .first("count")
+                .map(Integer::parseInt)
+                .orElse(3);
     }
 }
