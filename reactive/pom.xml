@@ -11,7 +11,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>example-reactive</artifactId>
+    <artifactId>reactive-movies</artifactId>
     <name>Helidon Reactive Movies</name>
 
     <properties>

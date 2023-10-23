@@ -23,7 +23,7 @@ class MovieBlockingService implements HttpService {
         httpRules.get("/nextMovie", this::nextMovie)
                 .get("/sequence", this::sequence)
                 .get("/parallel", this::parallel)
-                .get("/count", this::count)
+                .get("/alot", this::aLot)
                 .get("/encode", this::encode);
     }
 
@@ -46,7 +46,7 @@ class MovieBlockingService implements HttpService {
     }
 
     private void sequence(ServerRequest req, ServerResponse res) {
-        int count = count(req);
+        int count = aLot(req);
 
         var responses = new ArrayList<String>();
 
@@ -60,7 +60,7 @@ class MovieBlockingService implements HttpService {
     private void parallel(ServerRequest req, ServerResponse res) throws Exception {
 
         try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
-            int count = count(req);
+            int count = aLot(req);
 
             var futures = new ArrayList<Future<String>>();
             for (int i = 0; i < count; i++) {
@@ -76,27 +76,27 @@ class MovieBlockingService implements HttpService {
         }
     }
 
-    private int count(ServerRequest req) {
+    private int aLot(ServerRequest req) {
         return req.query().first("count").map(Integer::parseInt).orElse(3);
     }
 
-    private void encode(ServerRequest req, ServerResponse res) throws Exception {
+    private void encode(ServerRequest req, ServerResponse res) {
         //obstruct threads with encoding
         for (int value = 0; value < Integer.MAX_VALUE; value++){};
 
         res.send("Encoding done!");
     }
 
-    private long count(ServerRequest req, ServerResponse res) throws Exception {
+    private void aLot(ServerRequest req, ServerResponse res) throws Exception {
 
         AtomicLong result = new AtomicLong(0);
 
         try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
             for (int i = 0; i < 1_000_000; i++) {
-                exec.submit(result::getAndIncrement);
+                exec.submit(result::incrementAndGet);
             }
+            Thread.sleep(100);
+            res.send("Counted to: " + result.get());
         }
-
-        return result.get();
     }
 }
