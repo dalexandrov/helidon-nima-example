@@ -5,22 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.helidon.demo</groupId>
-    <artifactId>nima-demo</artifactId>
+    <artifactId>movies-demo</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Helidon Níma Movies Example project</name>
+    <name>Helidon Movies Example project</name>
     <modules>
-        <module>nima</module>
+        <module>helidon4</module>
         <module>reactive</module>
     </modules>
 
     <properties>
-        <helidon.version>4.0.0-ALPHA6</helidon.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <maven.compiler.release>${maven.compiler.source}</maven.compiler.release>
 
@@ -40,67 +39,6 @@
     </properties>
 
 
-    <dependencyManagement>
-        <dependencies>
-            <!--
-            Dependency management of Helidon and its third party dependencies.
-            If you want to manage all third party dependencies, switch the artifact id to helidon-bom instead.
-            -->
-            <dependency>
-                <groupId>io.helidon</groupId>
-                <artifactId>helidon-dependencies</artifactId>
-                <version>${helidon.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>io.helidon.nima.webserver</groupId>
-            <artifactId>helidon-nima-webserver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.nima.webclient</groupId>
-            <artifactId>helidon-nima-webclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.nima.http2</groupId>
-            <artifactId>helidon-nima-http2-webclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.nima.http2</groupId>
-            <artifactId>helidon-nima-http2-webserver</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.nima.http.media</groupId>
-            <artifactId>helidon-nima-http-media-jsonp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.nima.observe</groupId>
-            <artifactId>helidon-nima-observe-health</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.health</groupId>
-            <artifactId>helidon-health-checks</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.helidon.nima.testing.junit5</groupId>
-            <artifactId>helidon-nima-testing-junit5-webserver</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <build>
         <pluginManagement>

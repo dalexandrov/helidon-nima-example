@@ -1,17 +1,15 @@
-package io.helidon.nima.movies;
+package io.helidon.helidon4.movies;
 
-import io.helidon.common.http.Http;
-import io.helidon.nima.webclient.http1.Http1Client;
-import io.helidon.nima.webserver.WebServer;
-import io.helidon.nima.webserver.http.HttpRouting;
+import io.helidon.webclient.http1.Http1Client;
+import io.helidon.webserver.WebServer;
+import io.helidon.webserver.http.HttpRouting;
 
-public class NimaMain {
-    private static final Http.HeaderValue SERVER = Http.Header.create(Http.Header.SERVER, "Nima");
-
+public class Main {
     public static void main(String[] args) {
         WebServer ws = WebServer.builder()
-                .routing(NimaMain::routing)
+                .routing(Main::routing)
                 .port(8080)
+                .build()
                 .start();
 
         MovieBlockingService.client(Http1Client.builder()
@@ -21,7 +19,6 @@ public class NimaMain {
 
     static void routing(HttpRouting.Builder rules) {
         rules.addFilter((chain, req, res) -> {
-                    res.header(SERVER);
                     chain.proceed();
                 })
                 .register("/movies", new MovieService())

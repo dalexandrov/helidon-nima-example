@@ -28,7 +28,8 @@ class MovieReactiveService implements Service {
     public void update(Routing.Rules rules) {
         rules.get("/nextMovie", this::nextMovie)
                 .get("/sequence", this::sequence)
-                .get("/parallel", this::parallel);
+                .get("/parallel", this::parallel)
+                .get("/encode", this::encode);
     }
 
     private static WebClient client() {
@@ -76,5 +77,13 @@ class MovieReactiveService implements Service {
                 .first("count")
                 .map(Integer::parseInt)
                 .orElse(3);
+    }
+
+    private void encode(ServerRequest req, ServerResponse res) {
+        //obstruct threads with encoding
+
+        for (int value = 0; value < Integer.MAX_VALUE; value++){};
+
+        res.send("Encoding done!");
     }
 }

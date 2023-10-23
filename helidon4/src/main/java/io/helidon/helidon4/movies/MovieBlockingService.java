@@ -1,14 +1,15 @@
-package io.helidon.nima.movies;
+package io.helidon.helidon4.movies;
+
+import io.helidon.webclient.http1.Http1Client;
+import io.helidon.webserver.http.HttpRules;
+import io.helidon.webserver.http.HttpService;
+import io.helidon.webserver.http.ServerRequest;
+import io.helidon.webserver.http.ServerResponse;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import io.helidon.nima.webclient.http1.Http1Client;
-import io.helidon.nima.webserver.http.HttpRules;
-import io.helidon.nima.webserver.http.HttpService;
-import io.helidon.nima.webserver.http.ServerRequest;
-import io.helidon.nima.webserver.http.ServerResponse;
+import java.util.concurrent.atomic.AtomicLong;
 
 class MovieBlockingService implements HttpService {
     private static Http1Client client;
@@ -21,7 +22,9 @@ class MovieBlockingService implements HttpService {
     public void routing(HttpRules httpRules) {
         httpRules.get("/nextMovie", this::nextMovie)
                 .get("/sequence", this::sequence)
-                .get("/parallel", this::parallel);
+                .get("/parallel", this::parallel)
+                .get("/count", this::count)
+                .get("/encode", this::encode);
     }
 
     private static Http1Client client() {
@@ -34,7 +37,7 @@ class MovieBlockingService implements HttpService {
     private static String callMovieService(Http1Client client) {
         return client.get()
                 .path("/movies")
-                .request(String.class);
+                .requestEntity(String.class);
     }
 
     private void nextMovie(ServerRequest req, ServerResponse res) {
@@ -75,5 +78,25 @@ class MovieBlockingService implements HttpService {
 
     private int count(ServerRequest req) {
         return req.query().first("count").map(Integer::parseInt).orElse(3);
+    }
+
+    private void encode(ServerRequest req, ServerResponse res) throws Exception {
+        //obstruct threads with encoding
+        for (int value = 0; value < Integer.MAX_VALUE; value++){};
+
+        res.send("Encoding done!");
+    }
+
+    private long count(ServerRequest req, ServerResponse res) throws Exception {
+
+        AtomicLong result = new AtomicLong(0);
+
+        try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i < 1_000_000; i++) {
+                exec.submit(result::getAndIncrement);
+            }
+        }
+
+        return result.get();
     }
 }
